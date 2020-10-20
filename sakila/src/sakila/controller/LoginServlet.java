@@ -11,16 +11,19 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
-
+	// 로그인폼
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if(session.getAttribute("loginStaff")!=null) {
 			response.sendRedirect(request.getContextPath()+"/auth/IndexServlet");
 			return;
 		}
+		statsService = new StatsService();
+		Stats stats = statsService.getStats();
+		request.setAttribute("stats", stats);
 		request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
 	}
-
+	//로그인 액션
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 	}

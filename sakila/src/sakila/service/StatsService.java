@@ -1,87 +1,93 @@
 package sakila.service;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import sakila.dao.StatsDao;
+import sakila.util.DBUtil;
 import sakila.vo.Stats;
 
+
+
 public class StatsService {
-	private StatsDao statsDao;
-	private Stats getToday() {
-		Calender today = Calender.getInstance();
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-mm-dd");
-		String day = formater.format(totday);
-		State stats = new Stats();
-		stats.setDay(day);
-		return stats;
-	}
+	StatsDao statsDao;
+	
+	//오늘의 방문자 수를 조회하는 메소드
+	//stats 객체를 반환: stats.getDay() 메소드로 방문날짜 , stats.getCount()로 방문횟수 조회 가능
 	public Stats getStats() {
-		Stats returnStats = null;
+		System.out.print("debug: method-begin: StatsService.getStats()");
 		statsDao = new StatsDao();
-		final String URL = "";
-		final String USER = "root";
-		final String PASSWORD = "java1004";
-		Connection conn = null;
+		
+		//리스너에서 Class.forName()을 이미 호출하여 JDBC를 로드했으므로 따로 적을 필요는 없음
+		Connection conn=null;
+		Stats returnStats=null;
+				
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			conn.setAutoCommit(false);
+			//DBUtil을 사용해 DB에 연결
+			//연결 실패 시 Exception을 던짐
+			DBUtil dbutil = new DBUtil();
+			conn = dbUtil.getConnection();
 			
-			Stats stats = this.getToday();
+			//현재 날짜를 이용해 statsDao에 전달할 피라미터 객체를 만든 뒤
+			Stats paramStats = new Stats();
+			paramStats.setDay(this.getFormattedToday());
+			System.out.print("debug: instance-variable: paramStats="+paramStats);\
 			
-			returnStats = statsDao.selectDay(conn, stats);
+			//현재 날짜에 대한 방문자 수 정보를 가져옴
+			Stats todayStats = statsDao.selectOne(conn, paramStats);
+			System.out.print("debug: instance-variable: todayStats="+todayStats);
+			
+			System.out.print("debug: message: 'Excute SQL transection...'");
+			returnStats = statsDao.selectStatsOne(conn, todayStats);
+			System.out.print("debug: instance-variable: returnStats="+returnStats);
+			
 			conn.commit();
-			}catch(Exception e) {
-				try {
-					conn.rollback();
-				}catch (SQLException e) {
-					e1.printStackTrace();
-				}
-				e.printStackTrace();
-			}finally {
-				try {
-					conn.close();
-				}catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		return returnStats;
-	}
-	public void countStats() {
-		statsDao = new StatsDao();
-		final String URL = "";
-		final String USER = "root";
-		final String PASSWORD = "java1004";
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			conn.setAutoCommit(false);
-			
-			Stats stats = this.getToday();
-			// 
-			if(statsDao.selectDay(conn,stats)==null) {
-				statsDao.insertStats(conn, stats);
-			}else {
-				statsDao.updateStats(conn);
-			}
-			conn.commit();
-		}catch(Exception e) {
+			System.out.println("debug: message: 'Execute successfully: Connect DB and SQL transection'");
+		} catch (Exception e) { // DB 연결 혹은 쿼리 작업 중 예외 발생 시
+			e.printStackTrace();
+			System.out.println("debug: message: 'Execute failed: Connect DB and SQL transection'");
+
 			try {
+				System.out.println("debug: message: 'Execute rollback...'");
 				conn.rollback();
-			}catch (SQLException e) {
-					e1.printStackTrace();
+				System.out.println("debug: message: 'Execute successfully: rollback'");
+			} catch (Exception e2) { // 롤백 실패 시
+				e2.printStackTrace();
+				System.out.println("debug: message: 'Execute failed: rollback'");
 			}
-		}	finally {
+		} finally { // 어쩌나 저쩌나 작업이 중도 실패됐든 작업이 정상 종료 되었든간에 conn.close()로 자원 수동 반환
 			try {
+				System.out.println("debug: message: 'Close conn...'");
 				conn.close();
-				}catch (SQLException e) {
-					e.printStackTrace();
+				System.out.println("debug: message: 'Close successfully: conn'");
+			} catch (Exception e) { // conn.close() 실패 시
+				e.printStackTrace();
+				System.out.println("debug: message: 'Close failed: conn'");
 			}
 		}
+
+		System.out.println("debug: method-end: StatsService.getStats()");
+		return returnStats;
 	}
-}
+	//방문자 수를 1 더하는 메소드
+	public void addStats();{
+		System.out.print("debug: method-begin: StatsService.addStats()");
+		
+		statsDao = new StatsDao();
+		
+		Connection conn = null;
+		try {
+			//DBUtil을 사용해 DB에 연결함
+			//연결 실패 시 Exception을 던짐 
+			DBUtil dbUtil = new DBUtil();
+			conn = dbUtil.getConntecion();
+			
+			//현재 날짜를 이용해 statsDao에 전덜할 피라미터 객체를 만든 뒤
+			Stats paramStats = new Stats();
+			
+		}
+	}
+
 			
 			
