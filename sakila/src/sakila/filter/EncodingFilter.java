@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter("/*")
 public class EncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		System.out.println("EncodingFilter ½ÇÇà : request utf-8 ÀÎÄÚµù");
+		System.out.println("EncodingFilter ì‹¤í–‰ : request utf-8 ì¸ì½”ë”©");
 		request.setCharacterEncoding("utf-8");
 		chain.doFilter(request, response);
 	}

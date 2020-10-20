@@ -11,18 +11,18 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
-	//로그인 폼
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		if(session.getAttribute("loginStaff")==null) {
+		if(session.getAttribute("loginStaff")!=null) {
 			response.sendRedirect(request.getContextPath()+"/auth/IndexServlet");
 			return;
 		}
-		request.getRequestDispatcher("/WEP-INF/login.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	//로그인 액션
+	
 	}
 
 }
