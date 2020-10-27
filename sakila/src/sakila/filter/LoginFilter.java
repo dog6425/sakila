@@ -17,21 +17,14 @@ import javax.servlet.http.HttpSession;
 public class LoginFilter implements Filter {
 
 
-    public LoginFilter() {
-   
-    }
-
-	
-	public void destroy() {
-	
-	}
+    
 
 	
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		System.out.println("LoginFilter Ω««‡ : session ∞ÀªÁ");
+		System.out.println("LoginFilter Ïã§Ìñâ : session Í≤ÄÏÇ¨");
 		HttpSession session = ((HttpServletRequest)request).getSession();
 		if(session.getAttribute("loginStaff")==null) {
-			System.out.println("∑Œ±◊¿Œ »ƒ ¡¢±Ÿ!");
+			System.out.println("Î°úÍ∑∏Ïù∏ ÌõÑ Ï†ëÍ∑º!");
 			 ((HttpServletResponse)response).sendRedirect((request.getServletContext().getContextPath()+"/LoginServlet"));
 			return;
 		}
@@ -42,6 +35,14 @@ public class LoginFilter implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {
 		
 		
+	}
+	public LoginFilter() {
+		   
+    }
+
+	
+	public void destroy() {
+	
 	}
 
 }

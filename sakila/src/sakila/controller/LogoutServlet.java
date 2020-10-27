@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/auth/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.print("auth/IndexServlet 호출 성공");
-		request.getRequestDispatcher("/WEB-INF/views/auth/index.jsp").forward(request, response);
-	}
+		request.getSession().invalidate();
+		response.sendRedirect(request.getContextPath()+"/");
 	
 	}
-
+}
 	
